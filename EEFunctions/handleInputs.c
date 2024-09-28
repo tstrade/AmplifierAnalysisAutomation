@@ -1,17 +1,15 @@
-#include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
 
 double stringToDouble(char *string) {
   double convertedValue = 0.0;
   int len = strlen(string);
   int i;
-  bool decimal = false;
+  int decimal = 0;
   int divider = 10;
 
   for (i = 0; i < len; i++) {
     if (string[i] == '.') {
-      decimal = true;
+      decimal = 1;
       continue;
     }
 
@@ -24,16 +22,4 @@ double stringToDouble(char *string) {
     }
   }
   return convertedValue;
-}
-
-int encode(double inputs[], int numInputs) {
-  int BC = 0;
-  int i;
-  for (i = 0; i < numInputs; i++) {
-    BC += (inputs[i] == 0);
-    if (i != (numInputs - 1)) {
-      BC *= 10;
-    }
-  }
-  return BC;
 }

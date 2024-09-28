@@ -22,25 +22,41 @@ double findRI(double Vs, double Vi, double Rs) {
 
 double (*vFuncs[4])(double, double, double) = {findVS, findVI, findRS, findRI};
 
-double findVSVI(double values[]) {
-  double params[3] = {0, 0, 0};
-  int i,f;
-  int j = 0;
-  for (i = 0; i < 4; i++) {
-    if (!values[i]) {
-      f = i;
+double findVIVS(double *values) {
+  // If we have Vs and Vi, compute ratio
+  if (*values &&  *(values + 1)) {
+    return (*(values + 1) / *(values));
+  }
+
+  // Simiarly, if we have Rs and Ri, compute ratio
+  if (*(values + 2) && *(values + 3)) {
+    return (*(values + 3) / (*(values + 2) + *(values + 3)));
+  }
+
+  // If we have 3 parameters, we can find the fourth
+  // and update the input array
+  double validParams[3] = {0, 0, 0};
+  int idx,missing;
+  int validIdx = 0;
+  int zeroCount = 0;
+  for (idx = 0; idx < 4; idx++) {
+    if (!(*(values + idx))) {
+      // if a V and R value are missing, calculation cannot happen
+      if (zeroCount) { return -1; }
+      missing = idx;
+      zeroCount++;
     } else {
-      params[j] = values[i];
-      j++;
+      validParams[validIdx] = *(values + idx);
+      validIdx++;
     }
   }
-  values[f] = vFuncs[f](params[0],params[1],params[2]);
 
-  if (values[0] &&  values[1]) {
-    return (values[0] / values[1]);
-  } else {
-    return (values[2] / (values[2] + values[3]));
-  }
+  *(values + missing) = vFuncs[missing](validParams[0],
+                                    validParams[1],
+                                    validParams[2]);
+
+  return findVIVS(values);
+
 }
 
 int main(int argv, char *argc[]) {
@@ -54,6 +70,6 @@ int main(int argv, char *argc[]) {
                       stringToDouble(argc[4])};
 
 
-  printf("Vs/Vi is determined to be: %f\n", findVSVI(inputs));
+  printf("Vi/Vs is determined to be: %f\n", findVIVS(inputs));
   return 0;
 }
