@@ -11,41 +11,8 @@ bool eliminate(int BC) {
   return BC || 0;
 }
 
-double findRatio(int BC, double inputs[]) {
-  double VIVS1,VIVS2;
-  switch (BC) {
-  case 0:
-    VIVS1 = findVIVS(inputs[0], inputs[1], 0, 0);
-    VIVS2 = findVIVS(0, 0, inputs[2], inputs[3]);
-    return ((VIVS1 + VIVS2) / 2);
-  case 1:
-    double VS = findVS(inputs[1], inputs[2], inputs[3]);
-    VIVS1 = findVIVS(VS, inputs[1], 0, 0);
-    VIVS2 = findVIVS(0, 0, inputs[2], inputs[3]);
-    return ((VIVS1 + VIVS2) / 2);
-  case 2:
-    double VI = findVI(inputs[0], inputs[2], inputs[3]);
-    VIVS1 = findVIVS(VI, inputs[1], 0, 0);
-    VIVS2 = findVIVS(0, 0, inputs[2], inputs[3]);
-    return ((VIVS1 + VIVS2) / 2);
-  case 4:
-    double RS = findRS(inputs[0], inputs[1], inputs[3]);
-    VIVS1 = findVIVS(inputs[0], inputs[1], 0, 0);
-    VIVS2 = findVIVS(0, 0, RS, inputs[3]);
-    return ((VIVS1 + VIVS2) / 2);
-  case 8:
-    double RI = findRI(inputs[0], inputs[1], inputs[2]);
-    VIVS1 = findVIVS(inputs[0], inputs[1], 0, 0);
-    VIVS2 = findVIVS(0, 0, inputs[2], RI);
-    return ((VIVS1 + VIVS2) / 2);
-  default:
-    bool found = eliminate(BC);
-    if (found) {
-      return findVIVS(inputs[0], inputs[1], inputs[2], inputs[3]);
-    } else {
-      return -1;
-    }
-  }
+double findRatio(double inputs[]) {
+  return findVSVI(inputs);
 }
 
 int main(int argv, char *argc[]) {
